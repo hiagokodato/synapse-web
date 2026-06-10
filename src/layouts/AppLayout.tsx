@@ -16,8 +16,8 @@ import { cn } from '@/utils/cn'
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/chatbots', label: 'Chatbots', icon: Bot },
-  { to: '/conversations', label: 'Conversas', icon: MessageSquare, disabled: true },
-  { to: '/analytics', label: 'Analytics', icon: BarChart3, disabled: true },
+  { to: '/conversations', label: 'Conversas', icon: MessageSquare },
+  { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/settings', label: 'Configurações', icon: Settings, disabled: true },
 ]
 

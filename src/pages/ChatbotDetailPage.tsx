@@ -14,6 +14,7 @@ import { Spinner } from '@/components/ui/Spinner'
 import { ChatbotStatusBadge } from '@/features/chatbots/components/ChatbotStatusBadge'
 import { DeleteChatbotModal } from '@/features/chatbots/components/DeleteChatbotModal'
 import { EditChatbotModal } from '@/features/chatbots/components/EditChatbotModal'
+import { FlowList } from '@/features/flows/components/FlowList'
 import { useChatbot } from '@/features/chatbots/hooks/useChatbots'
 import { getErrorMessage } from '@/services/api'
 import { formatDate } from '@/utils/date'
@@ -87,13 +88,13 @@ export function ChatbotDetailPage() {
           icon={GitBranch}
           label="Fluxos"
           value={chatbot._count.flows}
-          hint="Fase 3 — Flow builder"
+          hint="Editor visual"
         />
         <StatCard
           icon={MessageSquare}
           label="Conversas"
           value={chatbot._count.conversations}
-          hint="Fase 4 — Tempo real"
+          hint="Ver conversas"
         />
         <StatCard icon={Workflow} label="Status" value={chatbot.status} hint="Gerenciado acima" />
         <StatCard
@@ -105,13 +106,7 @@ export function ChatbotDetailPage() {
         />
       </div>
 
-      <section className="rounded-xl border border-accent-500/20 bg-accent-500/5 p-6">
-        <h2 className="font-medium text-white">Flow builder</h2>
-        <p className="mt-2 text-sm text-muted">
-          O editor visual de fluxos com React Flow será implementado na Fase 3. Por enquanto, você
-          pode gerenciar as informações básicas do chatbot.
-        </p>
-      </section>
+      <FlowList chatbotId={chatbot.id} />
 
       <EditChatbotModal chatbot={chatbot} open={editOpen} onClose={() => setEditOpen(false)} />
       <DeleteChatbotModal
