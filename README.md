@@ -10,11 +10,11 @@ Synapse Web is the frontend application of the Synapse Platform, a SaaS-oriented
 
 - JWT authentication
 - Protected routes
-- Real-time communication *(planned)*
+- Real-time communication
 - Chatbot flow builder
 - Drag and drop interface (React Flow)
-- Analytics dashboard *(partial — overview metrics)*
-- Conversation monitoring *(planned)*
+- Analytics dashboard
+- Conversation monitoring
 - API integrations management *(planned)*
 - Responsive layout
 - Dark mode
@@ -35,7 +35,7 @@ Synapse Web is the frontend application of the Synapse Platform, a SaaS-oriented
 - React Hook Form + Zod
 - Axios
 - React Flow
-- Socket.io Client *(planned)*
+- Socket.io Client
 
 ---
 
@@ -150,8 +150,8 @@ CORS_ORIGIN=http://localhost:5173,https://synapse-web-mocha.vercel.app
 | 1 — Foundation | ✅ | Auth, routing, layout |
 | 2 — Chatbots | ✅ | Dashboard + CRUD |
 | 3 — Flow builder | ✅ | React Flow |
-| 4 — Conversations | 🔲 | Socket.io realtime |
-| 5 — Analytics | 🔲 | Charts (deploy ✅ Vercel) |
+| 4 — Conversations | ✅ | Socket.io realtime |
+| 5 — Analytics | ✅ | Charts + deploy Vercel |
 
 ---
 

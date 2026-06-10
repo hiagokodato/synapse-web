@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { FlowNodePalette } from '@/features/flows/components/FlowNodePalette'
+import { FlowImportExportActions } from '@/features/flows/components/LoadFlowModal'
 import { FlowPropertiesPanel } from '@/features/flows/components/FlowPropertiesPanel'
 import { flowNodeTypes } from '@/features/flows/components/flow-node-types'
 import { getErrorMessage } from '@/services/api'
@@ -43,12 +44,22 @@ export function FlowBuilder({ chatbotId, flow }: FlowBuilderProps) {
 
 function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
   const queryClient = useQueryClient()
-  const [nodes, , onNodesChange] = useNodesState(flow.definition.nodes)
+  const [nodes, setNodes, onNodesChange] = useNodesState(flow.definition.nodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(flow.definition.edges)
   const [selectedNode, setSelectedNode] = useState<FlowNode | null>(null)
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
 
   const definition = useMemo(() => ({ nodes, edges }), [nodes, edges])
+
+  const loadDefinition = useCallback(
+    (next: Flow['definition']) => {
+      setNodes(next.nodes)
+      setEdges(next.edges)
+      setSelectedNode(null)
+      setStatusMessage('Fluxo carregado no editor. Salve para persistir.')
+    },
+    [setEdges, setNodes],
+  )
 
   const isDirty = useMemo(() => {
     return JSON.stringify(definition) !== JSON.stringify(flow.definition)
@@ -117,10 +128,18 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {statusMessage && (
             <span className="hidden text-xs text-muted sm:inline">{statusMessage}</span>
           )}
+          <FlowImportExportActions
+            flowName={flow.name}
+            definition={definition}
+            savedDefinition={flow.definition}
+            onLoad={loadDefinition}
+            chatbotId={chatbotId}
+            flowId={flow.id}
+          />
           <Button
             variant="secondary"
             size="sm"

@@ -94,7 +94,7 @@ export function ChatbotDetailPage() {
           icon={MessageSquare}
           label="Conversas"
           value={chatbot._count.conversations}
-          hint="Fase 4 — Tempo real"
+          hint="Ver conversas"
         />
         <StatCard icon={Workflow} label="Status" value={chatbot.status} hint="Gerenciado acima" />
         <StatCard

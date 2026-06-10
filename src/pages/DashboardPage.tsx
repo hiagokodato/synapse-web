@@ -61,8 +61,8 @@ export function DashboardPage() {
           </h1>
           <p className="mt-1 text-muted">Visão geral da sua plataforma conversacional.</p>
         </div>
-        <Link to="/chatbots">
-          <Button variant="secondary">Gerenciar chatbots</Button>
+        <Link to="/analytics">
+          <Button variant="secondary">Ver analytics</Button>
         </Link>
       </section>
 

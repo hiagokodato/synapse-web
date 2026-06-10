@@ -8,9 +8,18 @@ export const queryKeys = {
   },
   analytics: {
     overview: ['analytics', 'overview'] as const,
+    chatbot: (chatbotId: string, days: number) =>
+      ['analytics', 'chatbot', chatbotId, days] as const,
   },
   flows: {
     list: (chatbotId: string) => ['flows', chatbotId] as const,
     detail: (chatbotId: string, flowId: string) => ['flows', chatbotId, flowId] as const,
+  },
+  conversations: {
+    list: (chatbotId: string) => ['conversations', chatbotId] as const,
+    detail: (chatbotId: string, conversationId: string) =>
+      ['conversations', chatbotId, conversationId] as const,
+    messages: (chatbotId: string, conversationId: string) =>
+      ['conversations', chatbotId, conversationId, 'messages'] as const,
   },
 } as const
