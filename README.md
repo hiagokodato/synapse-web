@@ -150,8 +150,16 @@ CORS_ORIGIN=http://localhost:5173,https://synapse-web-mocha.vercel.app
 | 1 — Foundation | ✅ | Auth, routing, layout |
 | 2 — Chatbots | ✅ | Dashboard + CRUD |
 | 3 — Flow builder | ✅ | React Flow |
-| 4 — Conversations | ✅ | Socket.io realtime |
+| 4 — Conversations | ✅ | Socket.io realtime + bot replies via flow engine (API) |
 | 5 — Analytics | ✅ | Charts + deploy Vercel |
+
+### Test the bot flow
+
+1. Create a chatbot and open the flow builder.
+2. Build a graph: `start` → `message` → `question` → `message` → `end` (fill `text` on message/question nodes).
+3. **Publish** the flow (only published flows are used by the API).
+4. Start a conversation — the bot sends the first message(s) automatically.
+5. Reply in the chat — the bot advances through `question` nodes and closes at `end`.
 
 ---
 
