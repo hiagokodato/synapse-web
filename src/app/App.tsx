@@ -5,6 +5,7 @@ import { AppLayout } from '@/layouts/AppLayout'
 import { ChatbotDetailPage } from '@/pages/ChatbotDetailPage'
 import { ChatbotsPage } from '@/pages/ChatbotsPage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { FlowBuilderPage } from '@/pages/FlowBuilderPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ProtectedRoute } from '@/routes/ProtectedRoute'
@@ -24,6 +25,7 @@ export function App() {
             <Route element={<AppLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="chatbots" element={<ChatbotsPage />} />
+              <Route path="chatbots/:id/flows/:flowId" element={<FlowBuilderPage />} />
               <Route path="chatbots/:id" element={<ChatbotDetailPage />} />
             </Route>
           </Route>
