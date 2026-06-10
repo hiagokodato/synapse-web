@@ -69,7 +69,15 @@ api.interceptors.response.use(
 
 export function getErrorMessage(error: unknown, fallback = 'Something went wrong.'): string {
   if (axios.isAxiosError<ApiError>(error)) {
-    const message = error.response?.data?.message
+    if (!error.response) {
+      if (error.code === 'ERR_NETWORK') {
+        return 'Erro de rede. Verifique sua conexão ou a configuração de CORS da API.'
+      }
+
+      return error.message || fallback
+    }
+
+    const message = error.response.data?.message
 
     if (Array.isArray(message)) {
       return message[0] ?? fallback
