@@ -1,7 +1,22 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react'
 
-import type { FlowNode } from '@/types/flow'
+import { FLOW_NODE_META } from '@/features/flows/constants'
+import type { FlowNode, FlowNodeType } from '@/types/flow'
 import { cn } from '@/utils/cn'
+
+function nodeBodyText(type: FlowNodeType, data: FlowNode['data']) {
+  const trimmed = data.text?.trim()
+  if (trimmed) return trimmed
+
+  const label = data.label?.trim()
+  const defaultLabel = FLOW_NODE_META[type].label
+  if (label && label !== defaultLabel) return label
+
+  if (type === 'message') return 'Nova mensagem...'
+  if (type === 'question') return 'Nova pergunta...'
+
+  return ''
+}
 
 type FlowNodeProps = NodeProps<FlowNode>
 
@@ -59,16 +74,16 @@ export function StartNode({ data, selected }: FlowNodeProps) {
 
 export function MessageNode({ data, selected }: FlowNodeProps) {
   return (
-    <NodeShell selected={!!selected} accent="text-accent-400" title="Mensagem">
-      <p className="text-sm text-slate-200">{data.text?.trim() || 'Nova mensagem...'}</p>
+    <NodeShell selected={!!selected} accent="text-accent-400" title={FLOW_NODE_META.message.label}>
+      <p className="text-sm text-slate-200">{nodeBodyText('message', data)}</p>
     </NodeShell>
   )
 }
 
 export function QuestionNode({ data, selected }: FlowNodeProps) {
   return (
-    <NodeShell selected={!!selected} accent="text-blue-400" title="Pergunta">
-      <p className="text-sm text-slate-200">{data.text?.trim() || 'Nova pergunta...'}</p>
+    <NodeShell selected={!!selected} accent="text-blue-400" title={FLOW_NODE_META.question.label}>
+      <p className="text-sm text-slate-200">{nodeBodyText('question', data)}</p>
     </NodeShell>
   )
 }
