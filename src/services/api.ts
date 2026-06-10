@@ -1,12 +1,11 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
+import { env } from '@/config/env'
 import { useAuthStore } from '@/stores/auth.store'
 import type { ApiError, TokenPair } from '@/types/auth'
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/v1'
-
 export const api = axios.create({
-  baseURL: API_URL,
+  baseURL: env.apiUrl,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -49,7 +48,7 @@ api.interceptors.response.use(
 
     try {
       refreshPromise ??= axios
-        .post<TokenPair>(`${API_URL}/auth/refresh`, { refreshToken })
+        .post<TokenPair>(`${env.apiUrl}/auth/refresh`, { refreshToken })
         .then((res) => {
           setTokens(res.data)
           return res.data
@@ -70,7 +69,15 @@ api.interceptors.response.use(
 
 export function getErrorMessage(error: unknown, fallback = 'Something went wrong.'): string {
   if (axios.isAxiosError<ApiError>(error)) {
-    const message = error.response?.data?.message
+    if (!error.response) {
+      if (error.code === 'ERR_NETWORK') {
+        return 'Erro de rede. Verifique sua conexão ou a configuração de CORS da API.'
+      }
+
+      return error.message || fallback
+    }
+
+    const message = error.response.data?.message
 
     if (Array.isArray(message)) {
       return message[0] ?? fallback
