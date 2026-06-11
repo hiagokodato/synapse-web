@@ -1,6 +1,13 @@
 import type { Edge, Node } from '@xyflow/react'
 
-export type FlowNodeType = 'start' | 'message' | 'question' | 'options' | 'input' | 'end'
+export type FlowNodeType =
+  | 'start'
+  | 'message'
+  | 'question'
+  | 'options'
+  | 'list'
+  | 'input'
+  | 'end'
 
 export type FlowInputType = 'text' | 'email' | 'phone' | 'number' | 'cpf'
 
@@ -19,6 +26,7 @@ export type FlowNodeData = {
   maxAttempts?: number
   invalidMessage?: string
   listOptions?: boolean
+  multiple?: boolean
 }
 
 export type FlowNode = Node<FlowNodeData, FlowNodeType>

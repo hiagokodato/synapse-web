@@ -2,6 +2,7 @@ import {
   CirclePlay,
   HelpCircle,
   ListChecks,
+  ListTodo,
   MessageSquare,
   Octagon,
   TextCursorInput,
@@ -19,11 +20,12 @@ const NODE_ICONS: Record<FlowNodeType, LucideIcon> = {
   message: MessageSquare,
   question: HelpCircle,
   options: ListChecks,
+  list: ListTodo,
   input: TextCursorInput,
   end: Octagon,
 }
 
-const PALETTE_TYPES: FlowNodeType[] = ['message', 'question', 'options', 'input', 'end']
+const PALETTE_TYPES: FlowNodeType[] = ['message', 'question', 'options', 'list', 'input', 'end']
 
 export function FlowNodePalette() {
   const { screenToFlowPosition, setNodes } = useReactFlow()

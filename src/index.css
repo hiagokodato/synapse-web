@@ -37,3 +37,24 @@
     @apply min-h-screen;
   }
 }
+
+/*
+ * React Flow reserves the `input`, `output` and `default` node types and ships
+ * default box styles (white background, border, padding) for them. All of our
+ * nodes are custom components, so we neutralize the built-in wrapper styles to
+ * avoid the white background leaking behind the custom node (e.g. the Capture
+ * block uses the reserved `input` type).
+ */
+.react-flow__node.react-flow__node-input,
+.react-flow__node.react-flow__node-output,
+.react-flow__node.react-flow__node-default {
+  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font-size: inherit;
+  box-shadow: none;
+}

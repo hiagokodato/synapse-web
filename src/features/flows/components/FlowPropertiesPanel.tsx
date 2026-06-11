@@ -18,11 +18,12 @@ type FlowPropertiesPanelProps = {
   selectedNode: FlowNode | null
 }
 
-const TEXT_TYPES: FlowNodeType[] = ['message', 'question', 'options', 'input']
+const TEXT_TYPES: FlowNodeType[] = ['message', 'question', 'options', 'list', 'input']
 
 function textLabel(type: FlowNodeType): string {
   if (type === 'message') return 'Texto da mensagem'
   if (type === 'input') return 'Pergunta de captura'
+  if (type === 'list') return 'Texto da lista'
   return 'Texto da pergunta'
 }
 
@@ -83,7 +84,9 @@ export function FlowPropertiesPanel({ selectedNode }: FlowPropertiesPanelProps) 
   const meta = FLOW_NODE_META[type]
   const hasText = TEXT_TYPES.includes(type)
   const canDelete = type !== 'start'
-  const supportsRetry = type === 'question' || type === 'options' || type === 'input'
+  const supportsRetry =
+    type === 'question' || type === 'options' || type === 'list' || type === 'input'
+  const hasOptions = type === 'options' || type === 'list'
   const options = selectedNode.data.options ?? []
 
   return (
@@ -129,7 +132,7 @@ export function FlowPropertiesPanel({ selectedNode }: FlowPropertiesPanelProps) 
           </div>
         )}
 
-        {type === 'options' && (
+        {hasOptions && (
           <div className="space-y-2">
             <Label>Opções</Label>
             <div className="space-y-2">
@@ -188,12 +191,26 @@ export function FlowPropertiesPanel({ selectedNode }: FlowPropertiesPanelProps) 
               Adicionar opção
             </Button>
             <p className="text-xs text-slate-500">
-              Cada opção tem uma saída própria. O usuário pode responder pelo número ou pelo texto.
+              {type === 'list'
+                ? 'O usuário escolhe pelo número ou pelo texto; o fluxo segue por uma única saída.'
+                : 'Cada opção tem uma saída própria. O usuário pode responder pelo número ou pelo texto.'}
             </p>
           </div>
         )}
 
-        {(type === 'options' || type === 'input') && (
+        {type === 'list' && (
+          <label className="flex items-center gap-2 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              className="size-4 rounded border-surface-600 bg-surface-900 accent-accent-500"
+              checked={selectedNode.data.multiple !== false}
+              onChange={(e) => patchData({ multiple: e.target.checked })}
+            />
+            Permitir escolher várias opções
+          </label>
+        )}
+
+        {(type === 'options' || type === 'list' || type === 'input') && (
           <div className="space-y-2">
             <Label htmlFor="node-variable">Salvar resposta em (variável)</Label>
             <Input
@@ -229,7 +246,7 @@ export function FlowPropertiesPanel({ selectedNode }: FlowPropertiesPanelProps) 
           </div>
         )}
 
-        {type === 'options' && (
+        {hasOptions && (
           <label className="flex items-center gap-2 text-sm text-slate-300">
             <input
               type="checkbox"

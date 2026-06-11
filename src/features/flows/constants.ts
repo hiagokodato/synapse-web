@@ -24,6 +24,11 @@ export const FLOW_NODE_META: Record<
     description: 'Múltipla escolha com um caminho por opção',
     color: 'amber',
   },
+  list: {
+    label: 'Lista',
+    description: 'Usuário escolhe uma ou várias opções e segue um caminho',
+    color: 'fuchsia',
+  },
   input: {
     label: 'Captura',
     description: 'Captura uma resposta e salva em variável',
@@ -85,13 +90,27 @@ export function createFlowNode(type: FlowNodeType, position: { x: number; y: num
 
   const data: FlowDefinition['nodes'][number]['data'] = { label: meta.label }
 
-  if (type === 'message' || type === 'question' || type === 'options' || type === 'input') {
+  if (
+    type === 'message' ||
+    type === 'question' ||
+    type === 'options' ||
+    type === 'list' ||
+    type === 'input'
+  ) {
     data.text = ''
   }
 
   if (type === 'options') {
     data.options = [createFlowOption('Opção 1'), createFlowOption('Opção 2')]
     data.listOptions = true
+    data.maxAttempts = 1
+  }
+
+  if (type === 'list') {
+    data.options = [createFlowOption('Opção 1'), createFlowOption('Opção 2')]
+    data.listOptions = true
+    data.multiple = true
+    data.variable = ''
     data.maxAttempts = 1
   }
 

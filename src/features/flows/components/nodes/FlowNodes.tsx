@@ -9,6 +9,7 @@ const ACCENT_CLASS: Record<FlowNodeType, string> = {
   message: 'text-accent-400',
   question: 'text-blue-400',
   options: 'text-amber-400',
+  list: 'text-fuchsia-400',
   input: 'text-cyan-400',
   end: 'text-slate-400',
 }
@@ -167,6 +168,64 @@ export function OptionsNode({ data, selected }: FlowNodeProps) {
         id="fallback"
         position={Position.Bottom}
         className="!size-2.5 !border-2 !border-surface-700 !bg-slate-500"
+      />
+    </NodeFrame>
+  )
+}
+
+export function ListNode({ data, selected }: FlowNodeProps) {
+  const options = data.options ?? []
+  const multiple = data.multiple !== false
+
+  return (
+    <NodeFrame selected={!!selected} type="list" className="min-w-[200px]">
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="!size-2.5 !border-2 !border-surface-700 !bg-accent-500"
+      />
+      <p className="mt-0.5 text-sm font-medium text-white">{nodeName('list', data)}</p>
+      <span className="mt-0.5 inline-block text-[10px] font-medium text-fuchsia-300">
+        {multiple ? 'Escolha múltipla' : 'Escolha única'}
+      </span>
+
+      <div className="mt-2 space-y-1">
+        {options.length === 0 && (
+          <p className="text-xs text-red-300">Adicione ao menos uma opção.</p>
+        )}
+        {options.map((option, index) => (
+          <div
+            key={option.id}
+            className="flex h-6 items-center gap-1.5 rounded-md border border-surface-600 bg-surface-800/60 px-2"
+          >
+            <span className="text-[11px] font-medium text-fuchsia-300">{index + 1}</span>
+            <span className="truncate text-[11px] text-slate-300">{option.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-2.5 flex items-center justify-between border-t border-surface-700/70 pt-2">
+        <div className="flex items-center gap-1.5">
+          <span className="size-1.5 rounded-full bg-slate-500" />
+          <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
+            Fallback
+          </span>
+        </div>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-fuchsia-400">
+          Continuar
+        </span>
+      </div>
+
+      <Handle
+        type="source"
+        id="fallback"
+        position={Position.Left}
+        className="!size-2.5 !border-2 !border-surface-700 !bg-slate-500"
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="!size-2.5 !border-2 !border-surface-700 !bg-fuchsia-500"
       />
     </NodeFrame>
   )

@@ -293,6 +293,7 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
                 if (node.type === 'end') return '#94a3b8'
                 if (node.type === 'question') return '#60a5fa'
                 if (node.type === 'options') return '#fbbf24'
+                if (node.type === 'list') return '#e879f9'
                 if (node.type === 'input') return '#22d3ee'
                 return '#a78bfa'
               }}

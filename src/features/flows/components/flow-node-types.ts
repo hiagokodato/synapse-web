@@ -1,6 +1,7 @@
 import {
   EndNode,
   InputNode,
+  ListNode,
   MessageNode,
   OptionsNode,
   QuestionNode,
@@ -12,6 +13,7 @@ export const flowNodeTypes = {
   message: MessageNode,
   question: QuestionNode,
   options: OptionsNode,
+  list: ListNode,
   input: InputNode,
   end: EndNode,
 }
