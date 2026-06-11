@@ -15,6 +15,9 @@ export const queryKeys = {
     list: (chatbotId: string) => ['flows', chatbotId] as const,
     detail: (chatbotId: string, flowId: string) => ['flows', chatbotId, flowId] as const,
   },
+  integrations: {
+    list: (chatbotId: string) => ['integrations', chatbotId] as const,
+  },
   conversations: {
     list: (chatbotId: string) => ['conversations', chatbotId] as const,
     detail: (chatbotId: string, conversationId: string) =>
