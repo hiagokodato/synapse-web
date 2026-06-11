@@ -1,5 +1,11 @@
 import { api } from '@/services/api'
-import type { CreateFlowPayload, Flow, FlowDefinition, UpdateFlowPayload } from '@/types/flow'
+import type {
+  CreateFlowPayload,
+  Flow,
+  FlowDefinition,
+  FlowValidationResult,
+  UpdateFlowPayload,
+} from '@/types/flow'
 
 function parseDefinition(raw: unknown): FlowDefinition {
   if (!raw || typeof raw !== 'object') {
@@ -43,5 +49,17 @@ export const flowService = {
 
   async remove(chatbotId: string, flowId: string): Promise<void> {
     await api.delete(`/chatbots/${chatbotId}/flows/${flowId}`)
+  },
+
+  async validate(
+    chatbotId: string,
+    flowId: string,
+    definition: FlowDefinition,
+  ): Promise<FlowValidationResult> {
+    const { data } = await api.post<FlowValidationResult>(
+      `/chatbots/${chatbotId}/flows/${flowId}/validate`,
+      { definition },
+    )
+    return data
   },
 }

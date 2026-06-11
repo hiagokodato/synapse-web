@@ -1,10 +1,24 @@
 import type { Edge, Node } from '@xyflow/react'
 
-export type FlowNodeType = 'start' | 'message' | 'question' | 'end'
+export type FlowNodeType = 'start' | 'message' | 'question' | 'options' | 'input' | 'end'
+
+export type FlowInputType = 'text' | 'email' | 'phone' | 'number' | 'cpf'
+
+export type FlowOption = {
+  id: string
+  label: string
+  value?: string
+}
 
 export type FlowNodeData = {
   label: string
   text?: string
+  options?: FlowOption[]
+  variable?: string
+  inputType?: FlowInputType
+  maxAttempts?: number
+  invalidMessage?: string
+  listOptions?: boolean
 }
 
 export type FlowNode = Node<FlowNodeData, FlowNodeType>
@@ -35,4 +49,19 @@ export type UpdateFlowPayload = {
   name?: string
   definition?: FlowDefinition
   published?: boolean
+}
+
+export type FlowValidationLevel = 'error' | 'warning'
+
+export type FlowValidationIssue = {
+  level: FlowValidationLevel
+  code: string
+  message: string
+  nodeId?: string
+  edgeId?: string
+}
+
+export type FlowValidationResult = {
+  valid: boolean
+  issues: FlowValidationIssue[]
 }

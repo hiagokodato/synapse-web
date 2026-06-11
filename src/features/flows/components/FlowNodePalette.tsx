@@ -1,8 +1,10 @@
 import {
   CirclePlay,
   HelpCircle,
+  ListChecks,
   MessageSquare,
   Octagon,
+  TextCursorInput,
   type LucideIcon,
 } from 'lucide-react'
 import { useCallback } from 'react'
@@ -16,10 +18,12 @@ const NODE_ICONS: Record<FlowNodeType, LucideIcon> = {
   start: CirclePlay,
   message: MessageSquare,
   question: HelpCircle,
+  options: ListChecks,
+  input: TextCursorInput,
   end: Octagon,
 }
 
-const PALETTE_TYPES: FlowNodeType[] = ['message', 'question', 'end']
+const PALETTE_TYPES: FlowNodeType[] = ['message', 'question', 'options', 'input', 'end']
 
 export function FlowNodePalette() {
   const { screenToFlowPosition, setNodes } = useReactFlow()
@@ -69,6 +73,11 @@ export function FlowNodePalette() {
           )
         })}
       </div>
+
+      <p className="mt-6 text-xs leading-relaxed text-slate-600">
+        Conecte blocos arrastando das saídas. Pergunta tem Sim/Não, Opções tem um caminho por
+        opção, e ambos têm uma saída de Fallback.
+      </p>
     </aside>
   )
 }
