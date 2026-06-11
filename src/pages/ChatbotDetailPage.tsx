@@ -15,6 +15,7 @@ import { ChatbotStatusBadge } from '@/features/chatbots/components/ChatbotStatus
 import { DeleteChatbotModal } from '@/features/chatbots/components/DeleteChatbotModal'
 import { EditChatbotModal } from '@/features/chatbots/components/EditChatbotModal'
 import { FlowList } from '@/features/flows/components/FlowList'
+import { IntegrationList } from '@/features/integrations/components/IntegrationList'
 import { useChatbot } from '@/features/chatbots/hooks/useChatbots'
 import { getErrorMessage } from '@/services/api'
 import { formatDate } from '@/utils/date'
@@ -107,6 +108,8 @@ export function ChatbotDetailPage() {
       </div>
 
       <FlowList chatbotId={chatbot.id} />
+
+      <IntegrationList chatbotId={chatbot.id} />
 
       <EditChatbotModal chatbot={chatbot} open={editOpen} onClose={() => setEditOpen(false)} />
       <DeleteChatbotModal

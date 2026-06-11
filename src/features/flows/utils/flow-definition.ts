@@ -1,6 +1,33 @@
-import type { FlowDefinition, FlowNodeType } from '@/types/flow'
+import type { FlowDefinition, FlowInputType, FlowNodeType, FlowOption } from '@/types/flow'
 
-const VALID_NODE_TYPES: FlowNodeType[] = ['start', 'message', 'question', 'end']
+const VALID_NODE_TYPES: FlowNodeType[] = [
+  'start',
+  'message',
+  'question',
+  'options',
+  'list',
+  'input',
+  'end',
+]
+
+const VALID_INPUT_TYPES: FlowInputType[] = ['text', 'email', 'phone', 'number', 'cpf']
+
+function parseImportedOptions(raw: unknown): FlowOption[] | undefined {
+  if (!Array.isArray(raw)) return undefined
+
+  const options: FlowOption[] = []
+  raw.forEach((entry, index) => {
+    if (!entry || typeof entry !== 'object') return
+    const item = entry as Record<string, unknown>
+    const label = typeof item.label === 'string' ? item.label : undefined
+    if (!label) return
+    const id = typeof item.id === 'string' && item.id.trim() ? item.id : `opt-${index}`
+    const value = typeof item.value === 'string' ? item.value : undefined
+    options.push({ id, label, ...(value !== undefined ? { value } : {}) })
+  })
+
+  return options.length > 0 ? options : undefined
+}
 
 export class FlowDefinitionError extends Error {
   constructor(message: string) {
@@ -29,7 +56,7 @@ export function parseFlowDefinition(raw: unknown): FlowDefinition {
     const type = item.type as FlowNodeType
     const id = item.id
     const position = item.position as { x?: unknown; y?: unknown } | undefined
-    const data = item.data as { label?: unknown; text?: unknown } | undefined
+    const data = item.data as Record<string, unknown> | undefined
 
     if (typeof id !== 'string' || !id.trim()) {
       throw new FlowDefinitionError(`Nó ${index + 1}: id é obrigatório.`)
@@ -47,6 +74,12 @@ export function parseFlowDefinition(raw: unknown): FlowDefinition {
       throw new FlowDefinitionError(`Nó ${index + 1}: position { x, y } inválida.`)
     }
 
+    const inputType =
+      typeof data?.inputType === 'string' &&
+      VALID_INPUT_TYPES.includes(data.inputType as FlowInputType)
+        ? (data.inputType as FlowInputType)
+        : undefined
+
     return {
       id,
       type,
@@ -54,6 +87,20 @@ export function parseFlowDefinition(raw: unknown): FlowDefinition {
       data: {
         label: typeof data?.label === 'string' ? data.label : type,
         text: typeof data?.text === 'string' ? data.text : undefined,
+        options: parseImportedOptions(data?.options),
+        variable:
+          typeof data?.variable === 'string' && data.variable.trim()
+            ? data.variable.trim()
+            : undefined,
+        inputType,
+        maxAttempts:
+          typeof data?.maxAttempts === 'number' && Number.isFinite(data.maxAttempts)
+            ? Math.max(0, Math.floor(data.maxAttempts))
+            : undefined,
+        invalidMessage:
+          typeof data?.invalidMessage === 'string' ? data.invalidMessage : undefined,
+        listOptions: typeof data?.listOptions === 'boolean' ? data.listOptions : undefined,
+        multiple: typeof data?.multiple === 'boolean' ? data.multiple : undefined,
       },
     }
   })
