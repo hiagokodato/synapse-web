@@ -46,8 +46,13 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
   const queryClient = useQueryClient()
   const [nodes, setNodes, onNodesChange] = useNodesState(flow.definition.nodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(flow.definition.edges)
-  const [selectedNode, setSelectedNode] = useState<FlowNode | null>(null)
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
+
+  const selectedNode = useMemo(() => {
+    if (!selectedNodeId) return null
+    return (nodes.find((node) => node.id === selectedNodeId) as FlowNode | undefined) ?? null
+  }, [nodes, selectedNodeId])
 
   const definition = useMemo(() => ({ nodes, edges }), [nodes, edges])
 
@@ -55,7 +60,7 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
     (next: Flow['definition']) => {
       setNodes(next.nodes)
       setEdges(next.edges)
-      setSelectedNode(null)
+      setSelectedNodeId(null)
       setStatusMessage('Fluxo carregado no editor. Salve para persistir.')
     },
     [setEdges, setNodes],
@@ -67,7 +72,7 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
 
   useOnSelectionChange({
     onChange: ({ nodes: selected }) => {
-      setSelectedNode((selected[0] as FlowNode | undefined) ?? null)
+      setSelectedNodeId(selected[0]?.id ?? null)
     },
   })
 
