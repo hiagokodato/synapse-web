@@ -20,6 +20,7 @@ import {
   ArrowLeft,
   CheckCircle2,
   CloudUpload,
+  Play,
   Save,
   ShieldCheck,
   X,
@@ -33,6 +34,7 @@ import { Button } from '@/components/ui/Button'
 import { FlowNodePalette } from '@/features/flows/components/FlowNodePalette'
 import { FlowImportExportActions } from '@/features/flows/components/LoadFlowModal'
 import { FlowPropertiesPanel } from '@/features/flows/components/FlowPropertiesPanel'
+import { FlowSimulatorPanel } from '@/features/flows/components/FlowSimulatorPanel'
 import { flowNodeTypes } from '@/features/flows/components/flow-node-types'
 import { normalizeFlowNodes } from '@/features/flows/constants'
 import { getErrorMessage } from '@/services/api'
@@ -94,6 +96,7 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
   const [validation, setValidation] = useState<FlowValidationResult | null>(null)
+  const [simulatorOpen, setSimulatorOpen] = useState(false)
 
   const selectedNode = useMemo(() => {
     if (!selectedNodeId) return null
@@ -246,6 +249,14 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
             Validar
           </Button>
           <Button
+            variant={simulatorOpen ? 'primary' : 'secondary'}
+            size="sm"
+            onClick={() => setSimulatorOpen((open) => !open)}
+          >
+            <Play className="size-4" />
+            Simular
+          </Button>
+          <Button
             variant="secondary"
             size="sm"
             loading={saveMutation.isPending}
@@ -300,6 +311,15 @@ function FlowBuilderEditor({ chatbotId, flow }: FlowBuilderProps) {
               maskColor="rgb(7 8 15 / 0.75)"
             />
           </ReactFlow>
+
+          {simulatorOpen && (
+            <FlowSimulatorPanel
+              chatbotId={chatbotId}
+              flowId={flow.id}
+              definition={definition}
+              onClose={() => setSimulatorOpen(false)}
+            />
+          )}
         </div>
 
         <FlowPropertiesPanel selectedNode={selectedNode} />

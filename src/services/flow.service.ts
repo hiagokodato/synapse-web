@@ -4,6 +4,8 @@ import type {
   Flow,
   FlowDefinition,
   FlowValidationResult,
+  SimulatePayload,
+  SimulationResult,
   UpdateFlowPayload,
 } from '@/types/flow'
 
@@ -59,6 +61,18 @@ export const flowService = {
     const { data } = await api.post<FlowValidationResult>(
       `/chatbots/${chatbotId}/flows/${flowId}/validate`,
       { definition },
+    )
+    return data
+  },
+
+  async simulate(
+    chatbotId: string,
+    flowId: string,
+    payload: SimulatePayload,
+  ): Promise<SimulationResult> {
+    const { data } = await api.post<SimulationResult>(
+      `/chatbots/${chatbotId}/flows/${flowId}/simulate`,
+      payload,
     )
     return data
   },

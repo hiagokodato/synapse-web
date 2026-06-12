@@ -73,3 +73,31 @@ export type FlowValidationResult = {
   valid: boolean
   issues: FlowValidationIssue[]
 }
+
+export type SimulationStatus = 'awaiting' | 'ended' | 'idle'
+
+export type SimulationMessage = {
+  nodeId: string
+  nodeType: string
+  content: string
+}
+
+export type SimulationState = {
+  currentNodeId: string
+  awaitingInput: boolean
+  attempts: number
+}
+
+export type SimulationResult = {
+  messages: SimulationMessage[]
+  state: SimulationState | null
+  variables: Record<string, string>
+  status: SimulationStatus
+}
+
+export type SimulatePayload = {
+  definition: FlowDefinition
+  message?: string
+  state?: SimulationState | null
+  variables?: Record<string, string>
+}
