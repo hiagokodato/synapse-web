@@ -7,9 +7,9 @@ export type AuthUser = {
   role: Role
 }
 
+/** O refresh token fica num cookie httpOnly definido pela API; o front só vê o access token. */
 export type TokenPair = {
   accessToken: string
-  refreshToken: string
 }
 
 export type AuthResponse = TokenPair & {

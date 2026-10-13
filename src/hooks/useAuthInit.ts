@@ -8,12 +8,22 @@ import { queryKeys } from '@/utils/query-keys'
 export function useAuthInit() {
   const accessToken = useAuthStore((s) => s.accessToken)
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const setTokens = useAuthStore((s) => s.setTokens)
   const setUser = useAuthStore((s) => s.setUser)
   const logout = useAuthStore((s) => s.logout)
 
-  const shouldValidate = isAuthenticated && !!accessToken
+  // O access token não é persistido: depois de recarregar a página, renova pelo cookie httpOnly.
+  const shouldRestore = isAuthenticated && !accessToken
+  const restore = useQuery({
+    queryKey: ['auth', 'restore'],
+    queryFn: authService.refresh,
+    enabled: shouldRestore,
+    retry: false,
+    gcTime: 0,
+  })
 
-  const { data, isPending, isError } = useQuery({
+  const shouldValidate = isAuthenticated && !!accessToken
+  const me = useQuery({
     queryKey: queryKeys.auth.me(accessToken),
     queryFn: authService.me,
     enabled: shouldValidate,
@@ -22,18 +32,24 @@ export function useAuthInit() {
   })
 
   useEffect(() => {
-    if (data) {
-      setUser(data)
+    if (restore.data) {
+      setTokens(restore.data)
     }
-  }, [data, setUser])
+  }, [restore.data, setTokens])
 
   useEffect(() => {
-    if (isError) {
+    if (me.data) {
+      setUser(me.data)
+    }
+  }, [me.data, setUser])
+
+  useEffect(() => {
+    if (restore.isError || me.isError) {
       logout()
     }
-  }, [isError, logout])
+  }, [restore.isError, me.isError, logout])
 
   return {
-    isLoading: shouldValidate && isPending,
+    isLoading: (shouldRestore && !restore.isError) || (shouldValidate && me.isPending),
   }
 }

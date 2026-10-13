@@ -5,6 +5,7 @@ export type IntegrationCredentialsMasked = {
   accessToken?: string
   phoneNumberId?: string
   verifyToken?: string
+  appSecret?: string
 }
 
 export type Integration = {
@@ -25,6 +26,7 @@ export type CreateIntegrationPayload = {
   accessToken?: string
   phoneNumberId?: string
   verifyToken?: string
+  appSecret?: string
 }
 
 export type UpdateIntegrationPayload = {
@@ -33,4 +35,5 @@ export type UpdateIntegrationPayload = {
   accessToken?: string
   phoneNumberId?: string
   verifyToken?: string
+  appSecret?: string
 }

@@ -131,10 +131,18 @@ export function parseFlowDefinition(raw: unknown): FlowDefinition {
   return { nodes, edges }
 }
 
+/** Mesmo limite aceito pela API para `definition` (150 KB). */
+const MAX_FLOW_FILE_BYTES = 150_000
+
 export function readFlowDefinitionFile(file: File): Promise<FlowDefinition> {
   return new Promise((resolve, reject) => {
-    if (!file.name.endsWith('.json') && file.type !== 'application/json') {
+    if (!file.name.toLowerCase().endsWith('.json')) {
       reject(new FlowDefinitionError('Selecione um arquivo .json válido.'))
+      return
+    }
+
+    if (file.size > MAX_FLOW_FILE_BYTES) {
+      reject(new FlowDefinitionError('Arquivo muito grande (máximo de 150 KB).'))
       return
     }
 

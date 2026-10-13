@@ -40,5 +40,4 @@ export type UpdateConversationPayload = {
 
 export type SendMessagePayload = {
   content: string
-  role?: MessageRole
 }

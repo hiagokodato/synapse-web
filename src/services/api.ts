@@ -6,6 +6,8 @@ import type { ApiError, TokenPair } from '@/types/auth'
 
 export const api = axios.create({
   baseURL: env.apiUrl,
+  // Envia o cookie httpOnly de refresh nas rotas /auth (a API restringe as origens no CORS).
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -37,18 +39,13 @@ api.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    const { refreshToken, setTokens, logout } = useAuthStore.getState()
-
-    if (!refreshToken) {
-      logout()
-      return Promise.reject(error)
-    }
+    const { setTokens, logout } = useAuthStore.getState()
 
     original._retry = true
 
     try {
       refreshPromise ??= axios
-        .post<TokenPair>(`${env.apiUrl}/auth/refresh`, { refreshToken })
+        .post<TokenPair>(`${env.apiUrl}/auth/refresh`, null, { withCredentials: true })
         .then((res) => {
           setTokens(res.data)
           return res.data

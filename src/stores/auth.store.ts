@@ -7,7 +7,6 @@ import type { AuthResponse, AuthUser, TokenPair } from '@/types/auth'
 type AuthState = {
   user: AuthUser | null
   accessToken: string | null
-  refreshToken: string | null
   isAuthenticated: boolean
   setSession: (response: AuthResponse) => void
   setTokens: (tokens: TokenPair) => void
@@ -21,21 +20,18 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       accessToken: null,
-      refreshToken: null,
       isAuthenticated: false,
 
       setSession: (response) =>
         set({
           user: response.user,
           accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
           isAuthenticated: true,
         }),
 
       setTokens: (tokens) =>
         set({
           accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
           isAuthenticated: true,
         }),
 
@@ -45,30 +41,25 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           accessToken: null,
-          refreshToken: null,
-          isAuthenticated: false,
+              isAuthenticated: false,
         }),
 
       signOut: async () => {
-        const { refreshToken, logout } = get()
-
-        if (refreshToken) {
-          try {
-            await authService.logout(refreshToken)
-          } catch {
-            // Token may already be invalid — clear local session anyway.
-          }
+        try {
+          await authService.logout()
+        } catch {
+          // Cookie may already be invalid — clear local session anyway.
         }
 
-        logout()
+        get().logout()
       },
     }),
     {
       name: 'synapse-auth',
+      // Nenhum token vai para o localStorage (alvo fácil de XSS): o access token fica em memória
+      // e, ao recarregar a página, é renovado pelo cookie httpOnly (ver useAuthInit).
       partialize: (state) => ({
         user: state.user,
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
     },
