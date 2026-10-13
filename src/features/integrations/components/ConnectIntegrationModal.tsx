@@ -22,9 +22,10 @@ type FormState = {
   accessToken: string
   phoneNumberId: string
   verifyToken: string
+  appSecret: string
 }
 
-const EMPTY: FormState = { botToken: '', accessToken: '', phoneNumberId: '', verifyToken: '' }
+const EMPTY: FormState = { botToken: '', accessToken: '', phoneNumberId: '', verifyToken: '', appSecret: '' }
 
 export function ConnectIntegrationModal({
   chatbotId,
@@ -68,8 +69,13 @@ export function ConnectIntegrationModal({
       return
     }
 
-    if (!form.accessToken.trim() || !form.phoneNumberId.trim() || !form.verifyToken.trim()) {
-      setError('Preencha accessToken, phoneNumberId e verifyToken.')
+    if (
+      !form.accessToken.trim() ||
+      !form.phoneNumberId.trim() ||
+      !form.verifyToken.trim() ||
+      !form.appSecret.trim()
+    ) {
+      setError('Preencha accessToken, phoneNumberId, verifyToken e App Secret.')
       return
     }
     mutation.mutate({
@@ -77,6 +83,7 @@ export function ConnectIntegrationModal({
       accessToken: form.accessToken.trim(),
       phoneNumberId: form.phoneNumberId.trim(),
       verifyToken: form.verifyToken.trim(),
+      appSecret: form.appSecret.trim(),
     })
   }
 
@@ -143,6 +150,20 @@ export function ConnectIntegrationModal({
               />
               <p className="text-xs text-slate-500">
                 Você definirá esse mesmo valor no painel da Meta ao configurar o webhook.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="appSecret">App Secret</Label>
+              <Input
+                id="appSecret"
+                type="password"
+                autoComplete="off"
+                placeholder="Configurações do app → Básico"
+                value={form.appSecret}
+                onChange={(e) => update('appSecret')(e.target.value)}
+              />
+              <p className="text-xs text-slate-500">
+                Usado para conferir a assinatura de cada mensagem enviada pela Meta.
               </p>
             </div>
           </>

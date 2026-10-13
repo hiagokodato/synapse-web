@@ -1,5 +1,5 @@
 import { api } from '@/services/api'
-import type { AuthResponse, AuthUser } from '@/types/auth'
+import type { AuthResponse, AuthUser, TokenPair } from '@/types/auth'
 
 export type LoginPayload = {
   email: string
@@ -28,7 +28,13 @@ export const authService = {
     return data
   },
 
-  async logout(refreshToken: string): Promise<void> {
-    await api.post('/auth/logout', { refreshToken })
+  /** Renova o access token usando o cookie httpOnly de refresh. */
+  async refresh(): Promise<TokenPair> {
+    const { data } = await api.post<TokenPair>('/auth/refresh')
+    return data
+  },
+
+  async logout(): Promise<void> {
+    await api.post('/auth/logout')
   },
 }

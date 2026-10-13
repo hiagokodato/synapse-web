@@ -11,7 +11,6 @@ export type SendMessageSocketPayload = {
   chatbotId: string
   conversationId: string
   content: string
-  role?: 'USER' | 'BOT' | 'SYSTEM'
 }
 
 export function createRealtimeSocket(accessToken: string): Socket {
